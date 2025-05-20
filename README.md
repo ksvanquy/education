@@ -1,6 +1,6 @@
 git status
 git add .
-git commit -m "start 1"
+git commit -m "start 2"
 git push origin main
 
 git checkout de91021
