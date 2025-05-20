@@ -79,38 +79,23 @@ class AnswerController extends Controller
         return response()->json(['message' => 'Deleted']);
     }
 
-public function vote(Request $request, Answer $answer)
-{
-    $request->validate([
-        'vote_type' => 'required|in:up,down',
-    ]);
-
-    $user = auth()->user();
-
-    DB::transaction(function () use ($request, $user, $answer) {
-        // Lấy bản ghi vote hiện tại của user cho answer này (khóa lại để tránh xung đột)
-        $vote = $answer->votes()->where('user_id', $user->id)->lockForUpdate()->first();
-
+    public function vote(Request $request, Answer $answer)
+    {
+        $request->validate(['vote_type' => 'required|in:up,down']);
+        $user = auth()->user();
+        $vote = $answer->votes()->where('user_id', $user->id)->first();
         if ($vote) {
             if ($vote->vote_type === $request->vote_type) {
-                // Nếu nhấn lại cùng loại vote => xóa (bỏ vote)
                 $vote->delete();
             } else {
-                // Nếu đổi loại vote => cập nhật
-                $vote->update([
-                    'vote_type' => $request->vote_type,
-                ]);
+                $vote->update(['vote_type' => $request->vote_type]);
             }
         } else {
-            // Nếu chưa vote => tạo mới
             $answer->votes()->create([
                 'user_id' => $user->id,
-                'vote_type' => $request->vote_type,
+                'vote_type' => $request->vote_type
             ]);
         }
-    });
-
-    return back();
-}
-
+        return back();
+    }
 }

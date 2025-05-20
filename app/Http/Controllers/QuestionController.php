@@ -125,16 +125,9 @@ class QuestionController extends Controller
     {
         $request->validate(['vote_type' => 'required|in:up,down']);
         $user = auth()->user();
-
-        // Lấy cả bản ghi đã bị soft delete
-        $vote = $question->votes()->withTrashed()->where('user_id', $user->id)->first();
-
+        $vote = $question->votes()->where('user_id', $user->id)->first();
         if ($vote) {
-            if ($vote->trashed()) {
-                // Nếu bản ghi đã bị soft delete, khôi phục và update lại loại vote
-                $vote->restore();
-                $vote->update(['vote_type' => $request->vote_type]);
-            } elseif ($vote->vote_type === $request->vote_type) {
+            if ($vote->vote_type === $request->vote_type) {
                 $vote->delete();
             } else {
                 $vote->update(['vote_type' => $request->vote_type]);
@@ -145,7 +138,6 @@ class QuestionController extends Controller
                 'vote_type' => $request->vote_type
             ]);
         }
-
         return back();
     }
 }

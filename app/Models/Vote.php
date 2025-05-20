@@ -1,10 +1,10 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 class Vote extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     protected $fillable = [
         'user_id', 'question_id', 'answer_id', 'vote_type'
     ];

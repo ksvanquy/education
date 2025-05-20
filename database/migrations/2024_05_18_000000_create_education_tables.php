@@ -86,7 +86,6 @@ return new class extends Migration
             $table->unsignedBigInteger('answer_id')->nullable();
             $table->enum('vote_type', ['up', 'down']);
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('question_id')->references('id')->on('questions');
             $table->foreign('answer_id')->references('id')->on('answers');
